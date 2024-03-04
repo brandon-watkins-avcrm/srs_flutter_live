@@ -14,7 +14,8 @@ dependencies:
     sdk: flutter
   fijkplayer: ^0.11.0
   flutter_webrtc: ^0.9.30
-  rtmp_with_capture: ^0.0.4
+  # AVCRM Live Stream doesnt need the ability to publish a stream so removing dependency
+  # rtmp_with_capture: ^0.0.4
 
 dev_dependencies:
   flutter_test:
