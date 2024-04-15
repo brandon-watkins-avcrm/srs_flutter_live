@@ -171,6 +171,10 @@ class WebRTCPlayer {
   void initState() {
   }
 
+  Future<List<webrtc.StatsReport>> getStats() async {
+    return _pc.getStats();
+  }
+
   /// Start play a url.
   /// [url] must a path parsed by [WebRTCUri.parse] in https://github.com/rtcdn/rtcdn-draft
   Future<void> play(String url) async {
