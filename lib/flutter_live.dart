@@ -211,11 +211,11 @@ class WebRTCPlayer {
       }
     };
 
-    _pc.addTransceiver(
-      kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
-      init: webrtc.RTCRtpTransceiverInit(
-          direction: webrtc.TransceiverDirection.RecvOnly),
-    );
+    // _pc.addTransceiver(
+    //   kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
+    //   init: webrtc.RTCRtpTransceiverInit(
+    //       direction: webrtc.TransceiverDirection.RecvOnly),
+    // );
 
     _pc.addTransceiver(
       kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeVideo,
@@ -229,6 +229,11 @@ class WebRTCPlayer {
     webrtc.RTCSessionDescription offer = await _pc.createOffer({
       'mandatory': {'OfferToReceiveVideo': true},
     });
+
+    // webrtc.RTCSessionDescription offer = await _pc.createOffer({
+    //   'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true},
+    // });
+    
 
     // If iOS then we need to override the sdp because of performance issues
     if (Platform.isIOS) {
