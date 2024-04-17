@@ -203,7 +203,7 @@ class WebRTCPlayer {
     print('WebRTC: createPeerConnection done');
 
     // Setup the peer connection.
-    _pc!.onTrack = (event) {
+    _pc.onTrack = (event) {
       if (event.track.kind == 'video') {
         if (onRemoteStream != null) {
           onRemoteStream(event.streams[0]);
@@ -211,51 +211,55 @@ class WebRTCPlayer {
       }
     };
 
-    _pc!.addTransceiver(
+    _pc.addTransceiver(
       kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
       init: webrtc.RTCRtpTransceiverInit(
           direction: webrtc.TransceiverDirection.RecvOnly),
     );
 
-    _pc!.addTransceiver(
+    _pc.addTransceiver(
       kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeVideo,
       init: webrtc.RTCRtpTransceiverInit(
           direction: webrtc.TransceiverDirection.RecvOnly),
     );
-    
+
     print('WebRTC: Setup PC done, A|V RecvOnly');
 
     // Start SDP handshake.
-    webrtc.RTCSessionDescription offer = await _pc!.createOffer({
-      'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true},
+    webrtc.RTCSessionDescription offer = await _pc.createOffer({
+      'mandatory': {'OfferToReceiveVideo': true},
     });
 
-    final profileLevelId = ProfileLevelId(
-      profile: H264Utils.ProfileBaseline,
-      level: H264Utils.Level1,
-    );
+    // If iOS then we need to override the sdp because of performance issues
+    if (Platform.isIOS) {
+      final profileLevelId = ProfileLevelId(
+        profile: H264Utils.ProfileConstrainedBaseline,
+        level: H264Utils.Level1,
+      );
 
-    final session = sdp_parser.parse(offer.sdp!);
+      final session = sdp_parser.parse(offer.sdp!);
 
-    session['media'][0]['profile-level-id'] = H264Utils.profileLevelIdToString(
-      profileLevelId,
-    );
+      session['media'][0]['profile-level-id'] =
+          H264Utils.profileLevelIdToString(
+        profileLevelId,
+      );
 
-    final newSdp = sdp_parser.write(session, null);
+      final newSdp = sdp_parser.write(session, null);
 
-    final newOffer = webrtc.RTCSessionDescription(newSdp, offer.type);
+      offer = webrtc.RTCSessionDescription(newSdp, offer.type);
+    }
 
-    await _pc!.setLocalDescription(newOffer);
+    await _pc.setLocalDescription(offer);
 
     print(
-        'WebRTC: createOffer, ${newOffer.type} is ${newOffer.sdp!.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
+        'WebRTC: createOffer, ${offer.type} is ${offer.sdp!.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    webrtc.RTCSessionDescription answer = await _handshake(url, newOffer.sdp!);
+    webrtc.RTCSessionDescription answer = await _handshake(url, offer.sdp!);
 
     print(
         'WebRTC: got ${answer.type} is ${answer.sdp!.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    await _pc!.setRemoteDescription(answer);
+    await _pc.setRemoteDescription(answer);
   }
 
   /// Handshake to exchange SDP, send offer and got answer.
@@ -304,7 +308,7 @@ class WebRTCPlayer {
   void dispose() {
     if (_pc != null) {
       print("webrtc play pc close ");
-      _pc!.close();
+      _pc.close();
     }
   }
 }
