@@ -189,7 +189,7 @@ class WebRTCPlayer {
     print('WebRTC: createPeerConnection done');
 
     // Setup the peer connection.
-    _pc!.onTrack = (event) {
+    _pc.onTrack = (event) {
       if (event.track.kind == 'video') {
         if (onRemoteStream != null) {
           onRemoteStream(event.streams[0]);
@@ -197,28 +197,31 @@ class WebRTCPlayer {
       }
     };
 
-    _pc!.addTransceiver(
-        kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
-        init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
-    );
+    // _pc!.addTransceiver(
+    //     kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeAudio,
+    //     init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
+    // );
 
-    _pc!.addTransceiver(
+    _pc.addTransceiver(
       kind: webrtc.RTCRtpMediaType.RTCRtpMediaTypeVideo,
       init: webrtc.RTCRtpTransceiverInit(direction: webrtc.TransceiverDirection.RecvOnly),
     );
+    
     print('WebRTC: Setup PC done, A|V RecvOnly');
 
     // Start SDP handshake.
-    webrtc.RTCSessionDescription offer = await _pc!.createOffer({
-      'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true},
+    webrtc.RTCSessionDescription offer = await _pc.createOffer({
+      'mandatory': {'OfferToReceiveVideo': true},
+      // 'mandatory': {'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true},
     });
-    await _pc!.setLocalDescription(offer);
+
+    await _pc.setLocalDescription(offer);
     print('WebRTC: createOffer, ${offer.type} is ${offer.sdp!.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
     webrtc.RTCSessionDescription answer = await _handshake(url, offer.sdp!);
     print('WebRTC: got ${answer.type} is ${answer.sdp!.replaceAll('\n', '\\n').replaceAll('\r', '\\r')}');
 
-    await _pc!.setRemoteDescription(answer);
+    await _pc.setRemoteDescription(answer);
   }
 
   /// Handshake to exchange SDP, send offer and got answer.
@@ -264,7 +267,7 @@ class WebRTCPlayer {
   void dispose() {
     if (_pc != null) {
       print("webrtc play pc close ");
-      _pc!.close();
+      _pc.close();
     }
   }
 }
