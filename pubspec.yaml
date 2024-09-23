@@ -2,6 +2,7 @@ name: flutter_live
 version: 1.0.17
 description: Live streaming player, iOS+Android, RTMP/HTTP-FLV/HLS/WebRTC, by Flutter+SRS.
 homepage: https://github.com/ossrs/flutter_live
+publish_to: "none"
 
 #environment:
 #  sdk: ">=2.18.0 <3.0.0"
@@ -12,8 +13,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fijkplayer: ^0.11.0
+  fijkplayer:
+    git:
+      url: https://github.com/brandon-watkins-avcrm/fijkplayer.git
+      ref: dc6b2e1
+  
   flutter_webrtc: ^0.9.30
+
   # AVCRM Live Stream doesnt need the ability to publish a stream so removing dependency
   # rtmp_with_capture: ^0.0.4
 
