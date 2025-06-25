@@ -16,7 +16,7 @@ dependencies:
       url: https://github.com/brandon-watkins-avcrm/fijkplayer.git
       ref: 9825ed2
   
-  flutter_webrtc: ^0.9.30
+  flutter_webrtc: ^0.14.1
 
   # AVCRM Live Stream doesnt need the ability to publish a stream so removing dependency
   # rtmp_with_capture: ^0.0.4
