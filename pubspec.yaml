@@ -17,6 +17,8 @@ dependencies:
       ref: 9825ed2
   
   flutter_webrtc: ^0.14.1
+  # Override path_provider in flutter_webrtc to fix error in Android
+  path_provider: ^2.1.5
 
   # AVCRM Live Stream doesnt need the ability to publish a stream so removing dependency
   # rtmp_with_capture: ^0.0.4

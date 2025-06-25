@@ -1,41 +1,24 @@
-buildscript {
-    ext.kotlin_version = '1.7.10'
-    repositories {
-        maven {
-            url 'https://maven.aliyun.com/repository/google'
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/jcenter'
-        }
-        maven {
-            url 'https://maven.aliyun.com/nexus/content/groups/public'
-        }
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 allprojects {
     repositories {
-        maven {
-            allowInsecureProtocol = true
-            url 'https://maven.aliyun.com/repository/google'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'https://maven.aliyun.com/repository/jcenter'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'https://maven.aliyun.com/nexus/content/groups/public'
-        }
+        google()
+        mavenCentral()
     }
 }
 
 rootProject.buildDir = '../build'
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
+        }
+    }
+}
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
@@ -46,3 +29,4 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+

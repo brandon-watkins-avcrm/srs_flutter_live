@@ -2,7 +2,7 @@ group 'net.ossrs.flutter_live'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.8.22'
     repositories {
         maven {
             url 'https://maven.aliyun.com/repository/google'
@@ -44,6 +44,15 @@ apply plugin: 'kotlin-android'
 android {
     namespace 'net.ossrs.flutter_live'
     compileSdkVersion 33
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
