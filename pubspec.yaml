@@ -16,7 +16,7 @@ dependencies:
   fijkplayer:
     git:
       url: https://github.com/brandon-watkins-avcrm/fijkplayer.git
-      ref: dc6b2e1
+      ref: 9825ed2
   
   flutter_webrtc: ^0.9.30
 
